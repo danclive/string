@@ -44,15 +44,11 @@ impl Str {
     }
 
     pub fn as_slice_mut(&mut self) -> &mut [char] {
-        &mut self.inner[..]
+        self.inner.as_mut_slice()
     }
 
     pub fn as_vec(self) -> Vec<char> {
         self.inner
-    }
-
-    pub fn as_mut_slice(&mut self) -> &mut [char] {
-        self.inner.as_mut_slice()
     }
 
     pub fn retain<F>(&mut self, f: F)
@@ -93,7 +89,7 @@ impl Str {
     }
 
     pub fn insert_str(&mut self, _idx: usize, _string: &str) {
-
+        
     }
 
     pub fn append(&mut self, other: &mut Self) {
