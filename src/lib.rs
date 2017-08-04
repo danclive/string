@@ -1,4 +1,113 @@
+//! A UTF-8 encoded, growable string.
+//!
+//! The `Str` type is string type that has owership over the [char]. 
+//!
+//! # Example
+//!
+//! You can create a `Str` from a literal string with `Str::from`:
+//!
+//! ```
+//! use str::Str;
+//!
+//! let hello = Str::from("hello, world!");
+//! ```
+//! 
+//! You can append a [`char`] to a `Str` with the [`push`] method, and
+//! append a [`&str`] with the [`push_str`] method;
+//!
+//! ```
+//! use str::Str;
+//!
+//! let mut hello = Str::from("Hello, ");
+//!
+//! hello.push('w');
+//! hello.push_str("orld!");
+//! ```
+//!
+//! [`&str`]: https://doc.rust-lang.org/std/primitive.str.html
+//! [`char`]: https://doc.rust-lang.org/std/primitive.char.html
+//! [`push`]: #method.push
+//! [`push_str`]: #method.push_str
+//!
+//! If you have a [`String`], you can create a `Str` from it with the
+//! [`from`] method, and you can convert `Str` to [`String`] whit the
+//! [`into`] method:
+//!
+//! ```
+//! use str::Str;
+//!
+//! let hello = String::from("Hello world!");
+//!
+//! let world = Str::from(hello);
+//!
+//! let hello_world: String = world.into();
+//! ```
+//!
+//! [`String`]: https://doc.rust-lang.org/std/string/struct.String.html
+//! [`from`]: #method.from
+//! [`into`]: #method.into
+
 use std::ops;
+
+/// A UTF-8 encoded, growable string.
+///
+/// The `Str` type is string type that has owership over the [char]. 
+///
+/// # Example
+///
+/// You can create a `Str` from a literal string with `Str::from`:
+///
+/// ```
+/// use str::Str;
+///
+/// let hello = Str::from("hello, world!");
+/// ```
+/// 
+/// You can append a [`char`] to a `Str` with the [`push`] method, and
+/// append a [`&str`] with the [`push_str`] method;
+///
+/// ```
+/// use str::Str;
+///
+/// let mut hello = Str::from("Hello, ");
+///
+/// hello.push('w');
+/// hello.push_str("orld!");
+/// ```
+///
+/// [`&str`]: https://doc.rust-lang.org/std/primitive.str.html
+/// [`char`]: https://doc.rust-lang.org/std/primitive.char.html
+/// [`push`]: #method.push
+/// [`push_str`]: #method.push_str
+///
+/// If you have a [`String`], you can create a `Str` from it with the
+/// [`from`] method, and you can convert `Str` to [`String`] whit the
+/// [`into`] method:
+///
+/// ```
+/// use str::Str;
+///
+/// let hello = String::from("Hello world!");
+///
+/// let world = Str::from(hello);
+///
+/// let hello_world: String = world.into();
+/// ```
+///
+/// [`String`]: https://doc.rust-lang.org/std/string/struct.String.html
+/// [`from`]: #method.from
+/// [`into`]: #method.into
+///
+///
+/// # Representation
+///
+/// A `Str` is made up of three components: a pointer to some chars, a
+/// length, and a capacity. The pointer points to an internal buffer `Str`
+/// uses to store its data. The length is the munber of bytes currently
+/// stored in the buffer, and the capacity is the size of the buffer in
+/// chars. As such, the length will always be less than or equal to the
+/// capacity.
+/// 
 
 #[derive(Clone, Debug)]
 pub struct Str {
@@ -32,6 +141,10 @@ impl Str {
 
     pub fn shrink_to_fit(&mut self) {
         self.inner.shrink_to_fit();
+    }
+
+    pub fn as_ptr(&self) -> *const char {
+        self.inner.as_ptr()
     }
 
     pub fn as_bytes(&self) -> Vec<u8> {
@@ -139,6 +252,14 @@ impl From<String> for Str {
     fn from(string: String) -> Str {
         Str {
             inner: string.chars().collect()
+        }
+    }
+}
+
+impl From<Vec<char>> for Str {
+    fn from(s: Vec<char>) -> Str {
+        Str {
+            inner: s
         }
     }
 }
