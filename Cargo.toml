@@ -1,8 +1,8 @@
 [package]
 name          = "str"
-version       = "0.1.1"
+version       = "0.1.2"
 license       = "MIT"
-authors       = ["dangcheng <dangcheng@hotmail.com>"]
+authors       = ["mitum <dangcheng@hotmail.com>"]
 description   = "string extension"
 homepage      = "https://github.com/mcorce/str"
 repository    = "https://github.com/mcorce/str"

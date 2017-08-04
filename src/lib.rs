@@ -43,7 +43,11 @@ impl Str {
         self.inner.as_slice()
     }
 
-    pub fn into_vec(self) -> Vec<char> {
+    pub fn as_slice_mut(&mut self) -> &mut [char] {
+        &mut self.inner[..]
+    }
+
+    pub fn as_vec(self) -> Vec<char> {
         self.inner
     }
 
@@ -143,6 +147,22 @@ impl From<String> for Str {
     }
 }
 
+impl<'a> From<&'a [char]> for Str {
+    fn from(s: &'a [char]) -> Str {
+        Str {
+            inner: s.to_vec()
+        }
+    }
+}
+
+impl<'a> From<&'a mut [char]> for Str {
+    fn from(s: &'a mut [char]) -> Str {
+        Str {
+            inner: s.to_vec()
+        }
+    }
+}
+
 impl Into<String> for Str {
     fn into(self) -> String {
         self.inner.iter().map(|c| c.encode_utf8(&mut [0; 4]).to_string()).collect()
@@ -228,5 +248,61 @@ impl PartialEq for Str {
 impl PartialOrd for Str {
     fn partial_cmp(&self, other: &Str) -> Option<::std::cmp::Ordering> {
         PartialOrd::partial_cmp(&self.inner, &other.inner)
+    }
+}
+
+impl ops::Index<usize> for Str {
+    type Output = char;
+
+    fn index(&self, idx: usize) -> &char {
+        &self.inner[idx]
+    }
+}
+
+impl ops::Index<ops::RangeFrom<usize>> for Str {
+    type Output = [char];
+
+    fn index(&self, range: ops::RangeFrom<usize>) -> &[char] {
+        self.inner.index(range)
+    }
+}
+
+impl ops::Index<ops::RangeTo<usize>> for Str {
+    type Output = [char];
+
+    fn index(&self, range: ops::RangeTo<usize>) -> &[char] {
+        self.inner.index(range)
+    }
+}
+
+impl ops::Index<ops::RangeFull> for Str {
+    type Output = [char];
+
+    fn index(&self, _range: ops::RangeFull) -> &[char] {
+        self.as_ref()
+    }
+}
+
+impl ops::IndexMut<usize> for Str {
+    fn index_mut(&mut self, idx: usize) -> &mut char {
+        &mut self.inner[idx]
+    }
+}
+
+impl ops::IndexMut<ops::RangeFrom<usize>> for Str {
+    fn index_mut(&mut self, range: ops::RangeFrom<usize>) -> &mut [char] {
+        self.inner.index_mut(range)
+    }
+}
+
+impl ops::IndexMut<ops::RangeTo<usize>> for Str {
+    fn index_mut(&mut self, range: ops::RangeTo<usize>) -> &mut [char] {
+        self.inner.index_mut(range)
+    }
+}
+
+impl ops::IndexMut<ops::RangeFull> for Str {
+    fn index_mut(&mut self, range: ops::RangeFull) -> &mut [char] {
+        self.inner.index_mut(range)
     }
 }
