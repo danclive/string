@@ -1,3 +1,4 @@
+use std::ops;
 
 #[derive(Clone, Debug)]
 pub struct Str {
@@ -5,177 +6,227 @@ pub struct Str {
 }
 
 impl Str {
-	pub fn new() -> Str {
-		Str {
-			inner: Vec::new()
-		}
-	}
+    pub fn new() -> Str {
+        Str {
+            inner: Vec::new()
+        }
+    }
 
-	pub fn with_capacity(capacity: usize) -> Str {
-		Str {
-			inner: Vec::with_capacity(capacity)
-		}
-	}
+    pub fn with_capacity(capacity: usize) -> Str {
+        Str {
+            inner: Vec::with_capacity(capacity)
+        }
+    }
 
-	pub fn capacity(&self) -> usize {
-		self.inner.capacity()
-	}
+    pub fn capacity(&self) -> usize {
+        self.inner.capacity()
+    }
 
-	pub fn reserve(&mut self, additional: usize) {
-		self.inner.reserve(additional);
-	}
+    pub fn reserve(&mut self, additional: usize) {
+        self.inner.reserve(additional);
+    }
 
-	pub fn reserve_exact(&mut self, additional: usize) {
-		self.inner.reserve_exact(additional);
-	}
+    pub fn reserve_exact(&mut self, additional: usize) {
+        self.inner.reserve_exact(additional);
+    }
 
-	pub fn shrink_to_fit(&mut self) {
-		self.inner.shrink_to_fit();
-	}
+    pub fn shrink_to_fit(&mut self) {
+        self.inner.shrink_to_fit();
+    }
 
-	pub fn push(&mut self, ch: char) {
-		self.inner.push(ch);
-	}
+    pub fn as_bytes(&self) -> Vec<u8> {
+        let s: String = self.clone().into();
+        s.into_bytes()
+    }
 
-	/*
+    pub fn as_slice(&self) -> &[char] {
+        self.inner.as_slice()
+    }
 
-	pub fn as_bytes(&self) -> &[u8] {
+    pub fn into_vec(self) -> Vec<char> {
+        self.inner
+    }
 
-		let a: String = self.clone().into();
+    pub fn as_mut_slice(&mut self) -> &mut [char] {
+        self.inner.as_mut_slice()
+    }
 
-		a.as_bytes()
-	}
-	*/
+    pub fn retain<F>(&mut self, f: F)
+        where F: FnMut(&char) -> bool
+    {
+        self.inner.retain(f)
+    }
 
-	// as_ptr(&self) -> *const u8
+    pub fn get(&self, idx: usize) -> Option<&char> {
+        self.inner.get(idx)
+    }
+    pub fn get_mut(&mut self, idx: usize) -> Option<&mut char> {
+        self.inner.get_mut(idx)
+    }
 
-	// get
-	// get_mut
+    pub fn truncate(&mut self, new_len: usize) {
+        self.inner.truncate(new_len);
+    }
 
-	pub fn truncate(&mut self, new_len: usize) {
-		self.inner.truncate(new_len);
-	}
+    pub fn push(&mut self, ch: char) {
+        self.inner.push(ch);
+    }
 
-	pub fn pop(&mut self) -> Option<char> {
-		self.inner.pop()
-	}
+    pub fn push_str(&mut self, string: &str) {
+        self.inner.extend(string.chars())
+    }
 
-	pub fn remove(&mut self, idx: usize) -> char {
-		self.inner.remove(idx)
-	}
+    pub fn pop(&mut self) -> Option<char> {
+        self.inner.pop()
+    }
 
-	pub fn insert(&mut self, idx: usize, ch: char) {
-		self.inner.insert(idx, ch);
-	}
+    pub fn remove(&mut self, idx: usize) -> char {
+        self.inner.remove(idx)
+    }
 
-	pub fn insert_str(&mut self, _idx: usize, _string: &str) {
+    pub fn insert(&mut self, idx: usize, ch: char) {
+        self.inner.insert(idx, ch);
+    }
 
-	}
+    pub fn insert_str(&mut self, _idx: usize, _string: &str) {
 
-	pub fn len(&self) -> usize {
-		self.inner.len()
-	}
+    }
 
-	pub fn is_empty(&self) -> bool {
-		self.inner.is_empty()
-	}
+    pub fn append(&mut self, other: &mut Self) {
+        self.inner.append(&mut other.inner)
+    }
 
-	pub fn split_off(&mut self, at: usize) -> Str {
-		let other = self.inner.split_off(at);
+    pub fn len(&self) -> usize {
+        self.inner.len()
+    }
 
-		Str {
-			inner: other
-		}
-	}
+    pub fn is_empty(&self) -> bool {
+        self.inner.is_empty()
+    }
 
-	pub fn split_at(&self, mid: usize) -> (Str, Str) {
-		let (a, b) = self.inner.split_at(mid);
+    pub fn split_off(&mut self, at: usize) -> Str {
+        let other = self.inner.split_off(at);
 
-		(Str { inner: a.to_vec() }, Str { inner: b.to_vec() })
-	}
+        Str {
+            inner: other
+        }
+    }
 
-	/*
-	pub fn from_mut_char<'a>(char: &'a mut [char]) -> &'a mut Str {
-		let mut a = Str {
-			inner: char.to_vec()
-		};
+    pub fn split_at(&self, mid: usize) -> (Str, Str) {
+        let (a, b) = self.inner.split_at(mid);
 
-		a.as_mut()
-	}
-	*/
+        (Str { inner: a.to_vec() }, Str { inner: b.to_vec() })
+    }
 
-	/*
-	pub fn split_at_mut(&mut self, mid: usize) -> (&mut Str, &mut Str) {
-	 	let (a, b) = self.inner.split_at_mut(mid);
+    pub fn clear(&mut self) {
+        self.inner.clear()
+    }
 
-	 	(Str::from_mut_char(a), Str::from_mut_char(b))
-	}
-	*/
-
-	pub fn clear(&mut self) {
-		self.inner.clear()
-	}
-
-	pub fn iter(self) -> StrIterator {
-		self.into_iter()
-	}
+    pub fn iter(self) -> StrIterator {
+        self.into_iter()
+    }
 }
 
 impl<'a> From<&'a str> for Str {
-	fn from(string: &'a str) -> Str {
-		Str {
-			inner: string.chars().collect()
-		}
-	}
+    fn from(string: &'a str) -> Str {
+        Str {
+            inner: string.chars().collect()
+        }
+    }
 }
 
 impl From<String> for Str {
-	fn from(string: String) -> Str {
-		Str {
-			inner: string.chars().collect()
-		}
-	}
+    fn from(string: String) -> Str {
+        Str {
+            inner: string.chars().collect()
+        }
+    }
 }
 
 impl Into<String> for Str {
-	fn into(self) -> String {
-		self.inner.iter().map(|c| c.encode_utf8(&mut [0; 4]).to_string()).collect()
-	}
+    fn into(self) -> String {
+        self.inner.iter().map(|c| c.encode_utf8(&mut [0; 4]).to_string()).collect()
+    }
 }
 
 impl Default for Str {
-	#[inline]
-	fn default() -> Str {
-		Str::new()
-	}
+    #[inline]
+    fn default() -> Str {
+        Str::new()
+    }
 }
 
 impl IntoIterator for Str {
-	type Item = char;
-	type IntoIter = StrIterator;
+    type Item = char;
+    type IntoIter = StrIterator;
 
-	fn into_iter(self) -> Self::IntoIter {
-		StrIterator {
-			inner: self.inner.into_iter()
-		}
-	}
+    fn into_iter(self) -> Self::IntoIter {
+        StrIterator {
+            inner: self.inner.into_iter()
+        }
+    }
 }
 
 pub struct StrIterator {
-	inner: ::std::vec::IntoIter<char>
+    inner: ::std::vec::IntoIter<char>
 }
 
 impl Iterator for StrIterator {
-	type Item = char;
-	fn next(&mut self) -> Option<char> {
-		self.inner.next()
-	}
+    type Item = char;
+    fn next(&mut self) -> Option<char> {
+        self.inner.next()
+    }
 }
 
+impl AsRef<Str> for Str {
+    fn as_ref(&self) -> &Str {
+        self
+    }
+}
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
+impl AsMut<Str> for Str {
+    fn as_mut(&mut self) -> &mut Str {
+        self
+    }
+}
+
+impl AsRef<[char]> for Str {
+    fn as_ref(&self) -> &[char] {
+        &self.inner
+    }
+}
+
+impl AsMut<[char]> for Str {
+    fn as_mut(&mut self) -> &mut [char] {
+        &mut self.inner
+    }
+}
+
+impl ops::Add for Str {
+    type Output = Str;
+    fn add(self, other: Str) -> Str {
+        let mut self2 = self;
+        let mut other = other;
+        self2.inner.append(&mut other.inner);
+        self2
+    }
+}
+
+impl ops::AddAssign for Str {
+    fn add_assign(&mut self, other: Str) {
+        let mut other = other;
+        self.inner.append(other.inner.as_mut())
+    }
+}
+
+impl PartialEq for Str {
+    fn eq(&self, other: &Str) -> bool {
+        self.inner == other.inner
+    }
+}
+
+impl PartialOrd for Str {
+    fn partial_cmp(&self, other: &Str) -> Option<::std::cmp::Ordering> {
+        PartialOrd::partial_cmp(&self.inner, &other.inner)
     }
 }
