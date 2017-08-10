@@ -226,6 +226,7 @@ impl Str {
     ///
     /// let s = Str::new();
     /// ```
+    #[inline]
     pub fn new() -> Str {
         Str {
             inner: Vec::new()
@@ -271,6 +272,7 @@ impl Str {
     /// // ...but this may make the vector reallocate
     /// s.push('a');
     /// ```
+    #[inline]
     pub fn with_capacity(capacity: usize) -> Str {
         Str {
             inner: Vec::with_capacity(capacity)
@@ -290,6 +292,7 @@ impl Str {
     ///
     /// assert!(s.capacity() >= 10);
     /// ```
+    #[inline]
     pub fn capacity(&self) -> usize {
         self.inner.capacity()
     }
@@ -342,6 +345,7 @@ impl Str {
     /// // ... doesn't actually increase.
     /// assert_eq!(10, s.capacity());
     /// ```
+    #[inline]
     pub fn reserve(&mut self, additional: usize) {
         self.inner.reserve(additional);
     }
@@ -391,7 +395,7 @@ impl Str {
     /// // ... doesn't actually increase.
     /// assert_eq!(10, s.capacity());
     /// ```
-
+    #[inline]
     pub fn reserve_exact(&mut self, additional: usize) {
         self.inner.reserve_exact(additional);
     }
@@ -413,6 +417,7 @@ impl Str {
     /// s.shrink_to_fit();
     /// assert_eq!(3, s.capacity());
     /// ```
+    #[inline]
     pub fn shrink_to_fit(&mut self) {
         self.inner.shrink_to_fit();
     }
@@ -431,6 +436,7 @@ impl Str {
     /// let s = Str::from("Hello");
     /// let ptr = s.as_ptr();
     /// ```
+    #[inline]
     pub fn as_ptr(&self) -> *const char {
         self.inner.as_ptr()
     }
@@ -475,6 +481,7 @@ impl Str {
     ///
     /// assert_eq!(Str::from("hello"), s);
     /// ```
+    #[inline]
     pub unsafe fn from_raw_parts(buf: *mut char, length: usize, capacity: usize) -> Str {
         Str {
             inner: Vec::from_raw_parts(buf, length, capacity)
@@ -495,6 +502,7 @@ impl Str {
     ///
     /// assert_eq!(&[104, 101, 108, 108, 111], &bytes[..]);
     /// ```
+    #[inline]
     pub fn as_bytes(&self) -> Vec<u8> {
         let s: String = self.clone().into();
         s.into_bytes()
@@ -516,6 +524,7 @@ impl Str {
     ///
     /// assert_eq!(&['h', 'e', 'l', 'l', 'o'][..], &bytes[..]);
     /// ```
+    #[inline]
     pub fn as_slice(&self) -> &[char] {
         self.inner.as_slice()
     }
@@ -539,6 +548,7 @@ impl Str {
     ///
     /// assert_eq!(Str::from("hallo"), s);
     /// ```
+    #[inline]
     pub fn as_mut_slice(&mut self) -> &mut [char] {
         self.inner.as_mut_slice()
     }
@@ -559,6 +569,7 @@ impl Str {
     ///
     /// assert_eq!(&['h', 'e', 'l', 'l', 'o'], &bytes[..]);
     /// ```
+    #[inline]
     pub fn as_vec(self) -> Vec<char> {
         self.inner
     }
@@ -582,63 +593,79 @@ impl Str {
     ///
     /// assert_eq!(Str::from("hallo"), s);
     /// ```
+    #[inline]
     pub fn as_mut_vec(&mut self) -> &mut Vec<char> {
         &mut self.inner
     }
 
+    #[inline]
     pub fn retain<F>(&mut self, f: F)
         where F: FnMut(&char) -> bool
     {
         self.inner.retain(f)
     }
 
+    #[inline]
     pub fn get(&self, idx: usize) -> Option<&char> {
         self.inner.get(idx)
     }
+
+    #[inline]
     pub fn get_mut(&mut self, idx: usize) -> Option<&mut char> {
         self.inner.get_mut(idx)
     }
 
+    #[inline]
     pub fn truncate(&mut self, new_len: usize) {
         self.inner.truncate(new_len);
     }
 
+    #[inline]
     pub fn push(&mut self, ch: char) {
         self.inner.push(ch);
     }
 
+    #[inline]
     pub fn push_str(&mut self, string: &str) {
         self.inner.extend(string.chars())
     }
 
+    #[inline]
     pub fn pop(&mut self) -> Option<char> {
         self.inner.pop()
     }
 
+    #[inline]
     pub fn remove(&mut self, idx: usize) -> char {
         self.inner.remove(idx)
     }
 
+    #[inline]
     pub fn insert(&mut self, idx: usize, ch: char) {
         self.inner.insert(idx, ch);
     }
 
+    #[inline]
     pub fn insert_str(&mut self, _idx: usize, _string: &str) {
         
     }
 
+    #[inline]
     pub fn append(&mut self, other: &mut Self) {
         self.inner.append(&mut other.inner)
     }
 
+    #[inline]
     pub fn len(&self) -> usize {
         self.inner.len()
     }
 
+    #[inline]
     pub fn is_empty(&self) -> bool {
         self.inner.is_empty()
     }
 
+    #[inline]
     pub fn split_off(&mut self, at: usize) -> Str {
         let other = self.inner.split_off(at);
 
@@ -647,22 +674,26 @@ impl Str {
         }
     }
 
+    #[inline]
     pub fn split_at(&self, mid: usize) -> (Str, Str) {
         let (a, b) = self.inner.split_at(mid);
 
         (Str { inner: a.to_vec() }, Str { inner: b.to_vec() })
     }
 
+    #[inline]
     pub fn clear(&mut self) {
         self.inner.clear()
     }
 
+    #[inline]
     pub fn iter(self) -> StrIterator {
         self.into_iter()
     }
 }
 
 impl<'a> From<&'a str> for Str {
+    #[inline]
     fn from(string: &'a str) -> Str {
         Str {
             inner: string.chars().collect()
@@ -671,6 +702,7 @@ impl<'a> From<&'a str> for Str {
 }
 
 impl From<String> for Str {
+    #[inline]
     fn from(string: String) -> Str {
         Str {
             inner: string.chars().collect()
@@ -679,6 +711,7 @@ impl From<String> for Str {
 }
 
 impl From<Vec<char>> for Str {
+    #[inline]
     fn from(s: Vec<char>) -> Str {
         Str {
             inner: s
@@ -687,6 +720,7 @@ impl From<Vec<char>> for Str {
 }
 
 impl<'a> From<&'a [char]> for Str {
+    #[inline]
     fn from(s: &'a [char]) -> Str {
         Str {
             inner: s.to_vec()
@@ -695,6 +729,7 @@ impl<'a> From<&'a [char]> for Str {
 }
 
 impl<'a> From<&'a mut [char]> for Str {
+    #[inline]
     fn from(s: &'a mut [char]) -> Str {
         Str {
             inner: s.to_vec()
@@ -724,7 +759,7 @@ impl Default for Str {
 impl IntoIterator for Str {
     type Item = char;
     type IntoIter = StrIterator;
-
+    #[inline]
     fn into_iter(self) -> Self::IntoIter {
         StrIterator {
             inner: self.inner.into_iter()
@@ -738,30 +773,35 @@ pub struct StrIterator {
 
 impl Iterator for StrIterator {
     type Item = char;
+    #[inline]
     fn next(&mut self) -> Option<char> {
         self.inner.next()
     }
 }
 
 impl AsRef<Str> for Str {
+    #[inline]
     fn as_ref(&self) -> &Str {
         self
     }
 }
 
 impl AsMut<Str> for Str {
+    #[inline]
     fn as_mut(&mut self) -> &mut Str {
         self
     }
 }
 
 impl AsRef<[char]> for Str {
+    #[inline]
     fn as_ref(&self) -> &[char] {
         &self.inner
     }
 }
 
 impl AsMut<[char]> for Str {
+    #[inline]
     fn as_mut(&mut self) -> &mut [char] {
         &mut self.inner
     }
@@ -769,6 +809,7 @@ impl AsMut<[char]> for Str {
 
 impl ops::Add for Str {
     type Output = Str;
+    #[inline]
     fn add(self, other: Str) -> Str {
         let mut self2 = self;
         let mut other = other;
@@ -777,20 +818,55 @@ impl ops::Add for Str {
     }
 }
 
+impl ops::Add<char> for Str {
+    type Output = Str;
+    #[inline]
+    fn add(mut self, other: char) -> Str {
+        self.push(other);
+        self
+    }
+}
+
+impl<'a> ops::Add<&'a str> for Str {
+    type Output = Str;
+    #[inline]
+    fn add(mut self, other: &str) -> Str {
+        self.push_str(other);
+        self
+    }
+}
+
 impl ops::AddAssign for Str {
+    #[inline]
     fn add_assign(&mut self, other: Str) {
         let mut other = other;
         self.inner.append(other.inner.as_mut())
     }
 }
 
+impl ops::AddAssign<char> for Str {
+    #[inline]
+    fn add_assign(&mut self, other: char) {
+        self.push(other)
+    }
+}
+
+impl<'a> ops::AddAssign<&'a str> for Str {
+    #[inline]
+    fn add_assign(&mut self, other: &str) {
+        self.push_str(other)
+    }
+}
+
 impl PartialEq for Str {
+    #[inline]
     fn eq(&self, other: &Str) -> bool {
         self.inner == other.inner
     }
 }
 
 impl PartialOrd for Str {
+    #[inline]
     fn partial_cmp(&self, other: &Str) -> Option<::std::cmp::Ordering> {
         PartialOrd::partial_cmp(&self.inner, &other.inner)
     }
@@ -798,15 +874,23 @@ impl PartialOrd for Str {
 
 impl ops::Index<usize> for Str {
     type Output = char;
-
+    #[inline]
     fn index(&self, idx: usize) -> &char {
         &self.inner[idx]
     }
 }
 
+impl ops::Index<ops::Range<usize>> for Str {
+    type Output = [char];
+    #[inline]
+    fn index(&self, range: ops::Range<usize>) -> &[char] {
+        self.inner.index(range)
+    }
+}
+
 impl ops::Index<ops::RangeFrom<usize>> for Str {
     type Output = [char];
-
+    #[inline]
     fn index(&self, range: ops::RangeFrom<usize>) -> &[char] {
         self.inner.index(range)
     }
@@ -814,7 +898,7 @@ impl ops::Index<ops::RangeFrom<usize>> for Str {
 
 impl ops::Index<ops::RangeTo<usize>> for Str {
     type Output = [char];
-
+    #[inline]
     fn index(&self, range: ops::RangeTo<usize>) -> &[char] {
         self.inner.index(range)
     }
@@ -822,37 +906,49 @@ impl ops::Index<ops::RangeTo<usize>> for Str {
 
 impl ops::Index<ops::RangeFull> for Str {
     type Output = [char];
-
+    #[inline]
     fn index(&self, _range: ops::RangeFull) -> &[char] {
         self.as_ref()
     }
 }
 
 impl ops::IndexMut<usize> for Str {
+    #[inline]
     fn index_mut(&mut self, idx: usize) -> &mut char {
         &mut self.inner[idx]
     }
 }
 
+impl ops::IndexMut<ops::Range<usize>> for Str {
+    #[inline]
+    fn index_mut(&mut self, range: ops::Range<usize>) -> &mut [char] {
+        self.inner.index_mut(range)
+    }
+}
+
 impl ops::IndexMut<ops::RangeFrom<usize>> for Str {
+    #[inline]
     fn index_mut(&mut self, range: ops::RangeFrom<usize>) -> &mut [char] {
         self.inner.index_mut(range)
     }
 }
 
 impl ops::IndexMut<ops::RangeTo<usize>> for Str {
+    #[inline]
     fn index_mut(&mut self, range: ops::RangeTo<usize>) -> &mut [char] {
         self.inner.index_mut(range)
     }
 }
 
 impl ops::IndexMut<ops::RangeFull> for Str {
+    #[inline]
     fn index_mut(&mut self, range: ops::RangeFull) -> &mut [char] {
         self.inner.index_mut(range)
     }
 }
 
 impl fmt::Display for Str {
+    #[inline]
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let s: String = self.into();
         fmt::Display::fmt(&s, f)
@@ -860,6 +956,7 @@ impl fmt::Display for Str {
 }
 
 impl fmt::Debug for Str {
+    #[inline]
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let s: String = self.into();
         fmt::Debug::fmt(&s, f)
