@@ -1,24 +1,24 @@
 //! A UTF-8 encoded, growable string.
 //!
-//! The `Str` type is string type that has owership over the [char]. 
+//! The `String2` type is string type that has owership over the [char]. 
 //!
 //! # Example
 //!
-//! You can create a `Str` from a literal string with `Str::from`:
+//! You can create a `String2` from a literal string with `String2::from`:
 //!
 //! ```
-//! use str::Str;
+//! use string2::String2;
 //!
-//! let hello = Str::from("hello, world!");
+//! let hello = String2::from("hello, world!");
 //! ```
 //! 
-//! You can append a [`char`] to a `Str` with the [`push`] method, and
+//! You can append a [`char`] to a `String2` with the [`push`] method, and
 //! append a [`&str`] with the [`push_str`] method;
 //!
 //! ```
-//! use str::Str;
+//! use string2::String2;
 //!
-//! let mut hello = Str::from("Hello, ");
+//! let mut hello = String2::from("Hello, ");
 //!
 //! hello.push('w');
 //! hello.push_str("orld!");
@@ -29,16 +29,16 @@
 //! [`push`]: #method.push
 //! [`push_str`]: #method.push_str
 //!
-//! If you have a [`String`], you can create a `Str` from it with the
-//! [`from`] method, and you can convert `Str` to [`String`] whit the
+//! If you have a [`String`], you can create a `String2` from it with the
+//! [`from`] method, and you can convert `String2` to [`String`] whit the
 //! [`into`] method:
 //!
 //! ```
-//! use str::Str;
+//! use string2::String2;
 //!
 //! let hello = String::from("Hello world!");
 //!
-//! let world = Str::from(hello);
+//! let world = String2::from(hello);
 //!
 //! let hello_world: String = world.into();
 //! ```
@@ -52,25 +52,25 @@ use std::fmt;
 
 /// A UTF-8 encoded, growable string.
 ///
-/// The `Str` type is string type that has owership over the [char]. 
+/// The `String2` type is string type that has owership over the [char]. 
 ///
 /// # Example
 ///
-/// You can create a `Str` from a literal string with `Str::from`:
+/// You can create a `String2` from a literal string with `String2::from`:
 ///
 /// ```
-/// use str::Str;
+/// use string2::String2;
 ///
-/// let hello = Str::from("hello, world!");
+/// let hello = String2::from("hello, world!");
 /// ```
 /// 
-/// You can append a [`char`] to a `Str` with the [`push`] method, and
+/// You can append a [`char`] to a `String2` with the [`push`] method, and
 /// append a [`&str`] with the [`push_str`] method;
 ///
 /// ```
-/// use str::Str;
+/// use string2::String2;
 ///
-/// let mut hello = Str::from("Hello, ");
+/// let mut hello = String2::from("Hello, ");
 ///
 /// hello.push('w');
 /// hello.push_str("orld!");
@@ -81,16 +81,16 @@ use std::fmt;
 /// [`push`]: #method.push
 /// [`push_str`]: #method.push_str
 ///
-/// If you have a [`String`], you can create a `Str` from it with the
-/// [`from`] method, and you can convert `Str` to [`String`] whit the
+/// If you have a [`String`], you can create a `String2` from it with the
+/// [`from`] method, and you can convert `String2` to [`String`] whit the
 /// [`into`] method:
 ///
 /// ```
-/// use str::Str;
+/// use string2::String2;
 ///
 /// let hello = String::from("Hello world!");
 ///
-/// let world = Str::from(hello);
+/// let world = String2::from(hello);
 ///
 /// let hello_world: String = world.into();
 /// ```
@@ -102,8 +102,8 @@ use std::fmt;
 ///
 /// # Representation
 ///
-/// A `Str` is made up of three components: a pointer to some chars, a
-/// length, and a capacity. The pointer points to an internal buffer `Str`
+/// A `String2` is made up of three components: a pointer to some chars, a
+/// length, and a capacity. The pointer points to an internal buffer `String2`
 /// uses to store its data. The length is the munber of bytes currently
 /// stored in the buffer, and the capacity is the size of the buffer in
 /// chars. As such, the length will always be less than or equal to the
@@ -116,9 +116,9 @@ use std::fmt;
 ///
 /// ```
 /// use std::mem;
-/// use str::Str;
+/// use string2::String2;
 ///
-/// let story = Str::from("Once upon a time...");
+/// let story = String2::from("Once upon a time...");
 ///
 /// let ptr = story.as_ptr();
 /// let len = story.len();
@@ -130,25 +130,25 @@ use std::fmt;
 /// // Now that we have our parts, we throw the story away.
 /// mem::forget(story);
 ///
-/// // We can re-build a Str out of ptr, len, and capacity. This is all
+/// // We can re-build a String2 out of ptr, len, and capacity. This is all
 /// // unsafe because we are responsible for making sure the components
 /// // valid:
-/// let s = unsafe { Str::from_raw_parts(ptr as *mut _, len, capacity) };
+/// let s = unsafe { String2::from_raw_parts(ptr as *mut _, len, capacity) };
 ///
-/// assert_eq!(Str::from("Once upon a time..."), s);
+/// assert_eq!(String2::from("Once upon a time..."), s);
 /// ```
 ///
 /// [`as_ptr`]: #method.as_ptr
 /// [`len`]: #method.len
 /// [`capacity`]: #method.capacity
 ///
-/// If a `Str` has enough capacity, adding elements to it will not
+/// If a `String2` has enough capacity, adding elements to it will not
 /// re-allocate. For example, consider this program:
 ///
 /// ```
-/// use str::Str;
+/// use string2::String2;
 ///
-/// let mut s = Str::new();
+/// let mut s = String2::new();
 ///
 /// println!("{}", s.capacity());
 ///
@@ -174,9 +174,9 @@ use std::fmt;
 /// [`with_capacity`] method to allocate the correct capacity initially:
 ///
 /// ```
-/// use str::Str;
+/// use string2::String2;
 ///
-/// let mut s = Str::with_capacity(25);
+/// let mut s = String2::with_capacity(25);
 ///
 /// println!("{}", s.capacity());
 ///
@@ -201,17 +201,17 @@ use std::fmt;
 ///
 /// Here, there's no need to allocate more memory inside the loop.
 #[derive(Clone, Eq, Ord)]
-pub struct Str {
+pub struct String2 {
     inner: Vec<char>
 }
 
-impl Str {
-    /// Creates a new empty `Str`.
+impl String2 {
+    /// Creates a new empty `String2`.
     ///
-    /// Given that the `Str` is empty, this will not allocate any initial
+    /// Given that the `String2` is empty, this will not allocate any initial
     /// buffer. While that means that this initial operation is very
     /// inexpensive, but may cause excessive allocation later, when you add
-    /// data. If you have an idea of how much data the `Str` will hold,
+    /// data. If you have an idea of how much data the `String2` will hold,
     /// consider the [`with_capacity`] method to prevent excessive
     /// re-allocation.
     ///
@@ -222,24 +222,24 @@ impl Str {
     /// Basic usage:
     ///
     /// ```
-    /// use str::Str;
+    /// use string2::String2;
     ///
-    /// let s = Str::new();
+    /// let s = String2::new();
     /// ```
     #[inline]
-    pub fn new() -> Str {
-        Str {
+    pub fn new() -> String2 {
+        String2 {
             inner: Vec::new()
         }
     }
 
-    /// Creates a new empty `Str` with a particular capacity.
+    /// Creates a new empty `String2` with a particular capacity.
     ///
-    /// `Str`s have an internal buffer to hold their data. The capacity is
+    /// `String2`s have an internal buffer to hold their data. The capacity is
     /// the length of that buffer, and can be queried with the [`capacity`]
-    /// method. This method creates an empty `Str`, but one with an initial
+    /// method. This method creates an empty `String2`, but one with an initial
     /// buffer that can hold `capacity` bytes. This is useful when you may be
-    /// appending a bunch of data to the `Str`, reducing the number of
+    /// appending a bunch of data to the `String2`, reducing the number of
     /// reallocations it needs to do.
     ///
     /// [`capacity`]: #method.capacity
@@ -254,11 +254,11 @@ impl Str {
     /// Basic usage:
     ///
     /// ```
-    /// use str::Str;
+    /// use string2::String2;
     ///
-    /// let mut s = Str::with_capacity(10);
+    /// let mut s = String2::with_capacity(10);
     ///
-    /// // The Str contains no chars, even though it has capacity for more
+    /// // The String2 contains no chars, even though it has capacity for more
     /// assert_eq!(s.len(), 0);
     ///
     /// // These are all done without reallocating...
@@ -273,22 +273,22 @@ impl Str {
     /// s.push('a');
     /// ```
     #[inline]
-    pub fn with_capacity(capacity: usize) -> Str {
-        Str {
+    pub fn with_capacity(capacity: usize) -> String2 {
+        String2 {
             inner: Vec::with_capacity(capacity)
         }
     }
 
-    /// Returns this `Str`'s capacity, in bytes.
+    /// Returns this `String2`'s capacity, in bytes.
     ///
     /// # Examples
     ///
     /// Basic usage:
     ///
     /// ```
-    /// use str::Str;
+    /// use string2::String2;
     ///
-    /// let s = Str::with_capacity(10);
+    /// let s = String2::with_capacity(10);
     ///
     /// assert!(s.capacity() >= 10);
     /// ```
@@ -297,7 +297,7 @@ impl Str {
         self.inner.capacity()
     }
 
-    /// Ensures that this `Str`'s capacity is at least `additional` bytes
+    /// Ensures that this `String2`'s capacity is at least `additional` bytes
     /// larger than its length.
     ///
     /// The capacity may be increased by more than `additional` bytes if it
@@ -317,9 +317,9 @@ impl Str {
     /// Basic usage:
     ///
     /// ```
-    /// use str::Str;
+    /// use string2::String2;
     ///
-    /// let mut s = Str::new();
+    /// let mut s = String2::new();
     ///
     /// s.reserve(10);
     ///
@@ -329,9 +329,9 @@ impl Str {
     /// This may not actually increase the capacity:
     ///
     /// ```
-    /// use str::Str;
+    /// use string2::String2;
     ///
-    /// let mut s = Str::with_capacity(10);
+    /// let mut s = String2::with_capacity(10);
     /// s.push('a');
     /// s.push('b');
     ///
@@ -350,7 +350,7 @@ impl Str {
         self.inner.reserve(additional);
     }
 
-    /// Ensures that this `Str`'s capacity is `additional` bytes
+    /// Ensures that this `String2`'s capacity is `additional` bytes
     /// larger than its length.
     ///
     /// Consider using the [`reserve`] method unless you absolutely know
@@ -367,9 +367,9 @@ impl Str {
     /// Basic usage:
     ///
     /// ```
-    /// use str::Str;
+    /// use string2::String2;
     ///
-    /// let mut s = Str::new();
+    /// let mut s = String2::new();
     ///
     /// s.reserve_exact(10);
     ///
@@ -379,9 +379,9 @@ impl Str {
     /// This may not actually increase the capacity:
     ///
     /// ```
-    /// use str::Str;
+    /// use string2::String2;
     ///
-    /// let mut s = Str::with_capacity(10);
+    /// let mut s = String2::with_capacity(10);
     /// s.push('a');
     /// s.push('b');
     ///
@@ -400,16 +400,16 @@ impl Str {
         self.inner.reserve_exact(additional);
     }
 
-    /// Shrinks the capacity of this `Str` to match its length.
+    /// Shrinks the capacity of this `String2` to match its length.
     ///
     /// # Examples
     ///
     /// Basic usage:
     ///
     /// ```
-    /// use str::Str;
+    /// use string2::String2;
     ///
-    /// let mut s = Str::from("foo");
+    /// let mut s = String2::from("foo");
     ///
     /// s.reserve(100);
     /// assert!(s.capacity() >= 100);
@@ -422,18 +422,18 @@ impl Str {
         self.inner.shrink_to_fit();
     }
 
-    /// Converts a `Str` to a raw pointer.
-    /// As `Str` are a vector of chars, the raw pointer points to a char.
-    /// This pointer will be pointing to the first byte of the `Str`.
+    /// Converts a `String2` to a raw pointer.
+    /// As `String2` are a vector of chars, the raw pointer points to a char.
+    /// This pointer will be pointing to the first byte of the `String2`.
     ///
     /// # Examples
     ///
     /// Basic usage:
     ///
     /// ```
-    /// use str::Str;
+    /// use string2::String2;
     ///
-    /// let s = Str::from("Hello");
+    /// let s = String2::from("Hello");
     /// let ptr = s.as_ptr();
     /// ```
     #[inline]
@@ -441,7 +441,7 @@ impl Str {
         self.inner.as_ptr()
     }
 
-    /// Creates a new `Str` from a length, capacity, and pointer.
+    /// Creates a new `String2` from a length, capacity, and pointer.
     ///
     /// # Safety
     ///
@@ -457,7 +457,7 @@ impl Str {
     /// internal datastructures.
     ///
     /// The ownership of `ptr` is effectively transferred to the
-    /// `Str` which may then deallocate, reallocate or change the
+    /// `String2` which may then deallocate, reallocate or change the
     /// contents of memory pointed to by the pointer at will. Ensure
     /// that nothing else uses the pointer after calling this
     /// function.
@@ -468,36 +468,36 @@ impl Str {
     ///
     /// ```
     /// use std::mem;
-    /// use str::Str;
+    /// use string2::String2;
     ///
-    /// let s = Str::from("hello");
+    /// let s = String2::from("hello");
     /// let ptr = s.as_ptr();
     /// let len = s.len();
     /// let capacity = s.capacity();
     ///
     /// mem::forget(s);
     ///
-    /// let s = unsafe { Str::from_raw_parts(ptr as *mut _, len, capacity) };
+    /// let s = unsafe { String2::from_raw_parts(ptr as *mut _, len, capacity) };
     ///
-    /// assert_eq!(Str::from("hello"), s);
+    /// assert_eq!(String2::from("hello"), s);
     /// ```
     #[inline]
-    pub unsafe fn from_raw_parts(buf: *mut char, length: usize, capacity: usize) -> Str {
-        Str {
+    pub unsafe fn from_raw_parts(buf: *mut char, length: usize, capacity: usize) -> String2 {
+        String2 {
             inner: Vec::from_raw_parts(buf, length, capacity)
         }
     }
 
-    /// Converts a `Str` into a byte vector.
+    /// Converts a `String2` into a byte vector.
     ///
     /// # Examples
     ///
     /// Basic usage:
     ///
     /// ```
-    /// use str::Str;
+    /// use string2::String2;
     ///
-    /// let s = Str::from("hello");
+    /// let s = String2::from("hello");
     /// let bytes = s.as_bytes();
     ///
     /// assert_eq!(&[104, 101, 108, 108, 111], &bytes[..]);
@@ -508,18 +508,18 @@ impl Str {
         s.into_bytes()
     }
 
-    /// Converts a `Str` into a char slice.
+    /// Converts a `String2` into a char slice.
     ///
-    /// This consumes the `Str`, so we do not need to copy its contents.
+    /// This consumes the `String2`, so we do not need to copy its contents.
     ///
     /// # Examples
     ///
     /// Basic usage:
     ///
     /// ```
-    /// use str::Str;
+    /// use string2::String2;
     ///
-    /// let s = Str::from("hello");
+    /// let s = String2::from("hello");
     /// let bytes = s.as_slice();
     ///
     /// assert_eq!(&['h', 'e', 'l', 'l', 'o'][..], &bytes[..]);
@@ -529,42 +529,42 @@ impl Str {
         self.inner.as_slice()
     }
 
-    /// Converts a `Str` into a mut char slice.
+    /// Converts a `String2` into a mut char slice.
     ///
-    /// This consumes the `Str`, so we do not need to copy its contents.
+    /// This consumes the `String2`, so we do not need to copy its contents.
     ///
     /// # Examples
     ///
     /// Basic usage:
     ///
     /// ```
-    /// use str::Str;
+    /// use string2::String2;
     ///
-    /// let mut s = Str::from("hello");
+    /// let mut s = String2::from("hello");
     /// {
     ///     let bytes = s.as_mut_slice();
     ///     bytes[1] = 'a';
     /// }
     ///
-    /// assert_eq!(Str::from("hallo"), s);
+    /// assert_eq!(String2::from("hallo"), s);
     /// ```
     #[inline]
     pub fn as_mut_slice(&mut self) -> &mut [char] {
         self.inner.as_mut_slice()
     }
 
-    /// Converts a `Str` into a char vector.
+    /// Converts a `String2` into a char vector.
     ///
-    /// This consumes the `Str`, so we do not need to copy its contents.
+    /// This consumes the `String2`, so we do not need to copy its contents.
     ///
     /// # Examples
     ///
     /// Basic usage:
     ///
     /// ```
-    /// use str::Str;
+    /// use string2::String2;
     ///
-    /// let s = Str::from("hello");
+    /// let s = String2::from("hello");
     /// let bytes = s.as_vec();
     ///
     /// assert_eq!(&['h', 'e', 'l', 'l', 'o'], &bytes[..]);
@@ -574,24 +574,24 @@ impl Str {
         self.inner
     }
 
-    /// Converts a `Str` into a mut char slice.
+    /// Converts a `String2` into a mut char slice.
     ///
-    /// This consumes the `Str`, so we do not need to copy its contents.
+    /// This consumes the `String2`, so we do not need to copy its contents.
     ///
     /// # Examples
     ///
     /// Basic usage:
     ///
     /// ```
-    /// use str::Str;
+    /// use string2::String2;
     ///
-    /// let mut s = Str::from("hello");
+    /// let mut s = String2::from("hello");
     /// {
     ///     let bytes = s.as_mut_vec();
     ///     bytes[1] = 'a';
     /// }
     ///
-    /// assert_eq!(Str::from("hallo"), s);
+    /// assert_eq!(String2::from("hallo"), s);
     /// ```
     #[inline]
     pub fn as_mut_vec(&mut self) -> &mut Vec<char> {
@@ -666,19 +666,19 @@ impl Str {
     }
 
     #[inline]
-    pub fn split_off(&mut self, at: usize) -> Str {
+    pub fn split_off(&mut self, at: usize) -> String2 {
         let other = self.inner.split_off(at);
 
-        Str {
+        String2 {
             inner: other
         }
     }
 
     #[inline]
-    pub fn split_at(&self, mid: usize) -> (Str, Str) {
+    pub fn split_at(&self, mid: usize) -> (String2, String2) {
         let (a, b) = self.inner.split_at(mid);
 
-        (Str { inner: a.to_vec() }, Str { inner: b.to_vec() })
+        (String2 { inner: a.to_vec() }, String2 { inner: b.to_vec() })
     }
 
     #[inline]
@@ -692,71 +692,71 @@ impl Str {
     }
 }
 
-impl<'a> From<&'a str> for Str {
+impl<'a> From<&'a str> for String2 {
     #[inline]
-    fn from(string: &'a str) -> Str {
-        Str {
+    fn from(string: &'a str) -> String2 {
+        String2 {
             inner: string.chars().collect()
         }
     }
 }
 
-impl From<String> for Str {
+impl From<String> for String2 {
     #[inline]
-    fn from(string: String) -> Str {
-        Str {
+    fn from(string: String) -> String2 {
+        String2 {
             inner: string.chars().collect()
         }
     }
 }
 
-impl From<Vec<char>> for Str {
+impl From<Vec<char>> for String2 {
     #[inline]
-    fn from(s: Vec<char>) -> Str {
-        Str {
+    fn from(s: Vec<char>) -> String2 {
+        String2 {
             inner: s
         }
     }
 }
 
-impl<'a> From<&'a [char]> for Str {
+impl<'a> From<&'a [char]> for String2 {
     #[inline]
-    fn from(s: &'a [char]) -> Str {
-        Str {
+    fn from(s: &'a [char]) -> String2 {
+        String2 {
             inner: s.to_vec()
         }
     }
 }
 
-impl<'a> From<&'a mut [char]> for Str {
+impl<'a> From<&'a mut [char]> for String2 {
     #[inline]
-    fn from(s: &'a mut [char]) -> Str {
-        Str {
+    fn from(s: &'a mut [char]) -> String2 {
+        String2 {
             inner: s.to_vec()
         }
     }
 }
 
-impl Into<String> for Str {
+impl Into<String> for String2 {
     fn into(self) -> String {
         self.inner.iter().map(|c| c.encode_utf8(&mut [0; 4]).to_string()).collect()
     }
 }
 
-impl<'a> Into<String> for &'a Str {
+impl<'a> Into<String> for &'a String2 {
     fn into(self) -> String {
         self.inner.iter().map(|c| c.encode_utf8(&mut [0; 4]).to_string()).collect()
     }
 }
 
-impl Default for Str {
+impl Default for String2 {
     #[inline]
-    fn default() -> Str {
-        Str::new()
+    fn default() -> String2 {
+        String2::new()
     }
 }
 
-impl IntoIterator for Str {
+impl IntoIterator for String2 {
     type Item = char;
     type IntoIter = StrIterator;
     #[inline]
@@ -779,38 +779,38 @@ impl Iterator for StrIterator {
     }
 }
 
-impl AsRef<Str> for Str {
+impl AsRef<String2> for String2 {
     #[inline]
-    fn as_ref(&self) -> &Str {
+    fn as_ref(&self) -> &String2 {
         self
     }
 }
 
-impl AsMut<Str> for Str {
+impl AsMut<String2> for String2 {
     #[inline]
-    fn as_mut(&mut self) -> &mut Str {
+    fn as_mut(&mut self) -> &mut String2 {
         self
     }
 }
 
-impl AsRef<[char]> for Str {
+impl AsRef<[char]> for String2 {
     #[inline]
     fn as_ref(&self) -> &[char] {
         &self.inner
     }
 }
 
-impl AsMut<[char]> for Str {
+impl AsMut<[char]> for String2 {
     #[inline]
     fn as_mut(&mut self) -> &mut [char] {
         &mut self.inner
     }
 }
 
-impl ops::Add for Str {
-    type Output = Str;
+impl ops::Add for String2 {
+    type Output = String2;
     #[inline]
-    fn add(self, other: Str) -> Str {
+    fn add(self, other: String2) -> String2 {
         let mut self2 = self;
         let mut other = other;
         self2.inner.append(&mut other.inner);
@@ -818,61 +818,61 @@ impl ops::Add for Str {
     }
 }
 
-impl ops::Add<char> for Str {
-    type Output = Str;
+impl ops::Add<char> for String2 {
+    type Output = String2;
     #[inline]
-    fn add(mut self, other: char) -> Str {
+    fn add(mut self, other: char) -> String2 {
         self.push(other);
         self
     }
 }
 
-impl<'a> ops::Add<&'a str> for Str {
-    type Output = Str;
+impl<'a> ops::Add<&'a str> for String2 {
+    type Output = String2;
     #[inline]
-    fn add(mut self, other: &str) -> Str {
+    fn add(mut self, other: &str) -> String2 {
         self.push_str(other);
         self
     }
 }
 
-impl ops::AddAssign for Str {
+impl ops::AddAssign for String2 {
     #[inline]
-    fn add_assign(&mut self, other: Str) {
+    fn add_assign(&mut self, other: String2) {
         let mut other = other;
         self.inner.append(other.inner.as_mut())
     }
 }
 
-impl ops::AddAssign<char> for Str {
+impl ops::AddAssign<char> for String2 {
     #[inline]
     fn add_assign(&mut self, other: char) {
         self.push(other)
     }
 }
 
-impl<'a> ops::AddAssign<&'a str> for Str {
+impl<'a> ops::AddAssign<&'a str> for String2 {
     #[inline]
     fn add_assign(&mut self, other: &str) {
         self.push_str(other)
     }
 }
 
-impl PartialEq for Str {
+impl PartialEq for String2 {
     #[inline]
-    fn eq(&self, other: &Str) -> bool {
+    fn eq(&self, other: &String2) -> bool {
         self.inner == other.inner
     }
 }
 
-impl PartialOrd for Str {
+impl PartialOrd for String2 {
     #[inline]
-    fn partial_cmp(&self, other: &Str) -> Option<::std::cmp::Ordering> {
+    fn partial_cmp(&self, other: &String2) -> Option<::std::cmp::Ordering> {
         PartialOrd::partial_cmp(&self.inner, &other.inner)
     }
 }
 
-impl ops::Index<usize> for Str {
+impl ops::Index<usize> for String2 {
     type Output = char;
     #[inline]
     fn index(&self, idx: usize) -> &char {
@@ -880,7 +880,7 @@ impl ops::Index<usize> for Str {
     }
 }
 
-impl ops::Index<ops::Range<usize>> for Str {
+impl ops::Index<ops::Range<usize>> for String2 {
     type Output = [char];
     #[inline]
     fn index(&self, range: ops::Range<usize>) -> &[char] {
@@ -888,7 +888,7 @@ impl ops::Index<ops::Range<usize>> for Str {
     }
 }
 
-impl ops::Index<ops::RangeFrom<usize>> for Str {
+impl ops::Index<ops::RangeFrom<usize>> for String2 {
     type Output = [char];
     #[inline]
     fn index(&self, range: ops::RangeFrom<usize>) -> &[char] {
@@ -896,7 +896,7 @@ impl ops::Index<ops::RangeFrom<usize>> for Str {
     }
 }
 
-impl ops::Index<ops::RangeTo<usize>> for Str {
+impl ops::Index<ops::RangeTo<usize>> for String2 {
     type Output = [char];
     #[inline]
     fn index(&self, range: ops::RangeTo<usize>) -> &[char] {
@@ -904,7 +904,7 @@ impl ops::Index<ops::RangeTo<usize>> for Str {
     }
 }
 
-impl ops::Index<ops::RangeFull> for Str {
+impl ops::Index<ops::RangeFull> for String2 {
     type Output = [char];
     #[inline]
     fn index(&self, _range: ops::RangeFull) -> &[char] {
@@ -912,42 +912,42 @@ impl ops::Index<ops::RangeFull> for Str {
     }
 }
 
-impl ops::IndexMut<usize> for Str {
+impl ops::IndexMut<usize> for String2 {
     #[inline]
     fn index_mut(&mut self, idx: usize) -> &mut char {
         &mut self.inner[idx]
     }
 }
 
-impl ops::IndexMut<ops::Range<usize>> for Str {
+impl ops::IndexMut<ops::Range<usize>> for String2 {
     #[inline]
     fn index_mut(&mut self, range: ops::Range<usize>) -> &mut [char] {
         self.inner.index_mut(range)
     }
 }
 
-impl ops::IndexMut<ops::RangeFrom<usize>> for Str {
+impl ops::IndexMut<ops::RangeFrom<usize>> for String2 {
     #[inline]
     fn index_mut(&mut self, range: ops::RangeFrom<usize>) -> &mut [char] {
         self.inner.index_mut(range)
     }
 }
 
-impl ops::IndexMut<ops::RangeTo<usize>> for Str {
+impl ops::IndexMut<ops::RangeTo<usize>> for String2 {
     #[inline]
     fn index_mut(&mut self, range: ops::RangeTo<usize>) -> &mut [char] {
         self.inner.index_mut(range)
     }
 }
 
-impl ops::IndexMut<ops::RangeFull> for Str {
+impl ops::IndexMut<ops::RangeFull> for String2 {
     #[inline]
     fn index_mut(&mut self, range: ops::RangeFull) -> &mut [char] {
         self.inner.index_mut(range)
     }
 }
 
-impl fmt::Display for Str {
+impl fmt::Display for String2 {
     #[inline]
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let s: String = self.into();
@@ -955,7 +955,7 @@ impl fmt::Display for Str {
     }
 }
 
-impl fmt::Debug for Str {
+impl fmt::Debug for String2 {
     #[inline]
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let s: String = self.into();

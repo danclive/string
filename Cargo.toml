@@ -1,5 +1,5 @@
 [package]
-name          = "str"
+name          = "string2"
 version       = "0.1.4"
 license       = "MIT"
 authors       = ["mitum <dangcheng@hotmail.com>"]
